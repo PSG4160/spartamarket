@@ -22,5 +22,16 @@ def product_detail(request, pk):
     }
     return render(request, 'products/product_detail.html', context)
 
-def create(request, pk):
-    pass
+@login_required
+def create(request):
+    if request.method == "POST":
+        form = ProductForm(request.POST,  request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.author = request.user
+            product.save()
+            return redirect("products:product_detail", product.pk)
+    else:
+        form = ProductForm()
+    context = {"form":form}
+    return render(request, "products/create.html", context)
