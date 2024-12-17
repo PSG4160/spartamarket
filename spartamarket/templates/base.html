@@ -13,6 +13,9 @@
                 {% csrf_token %}
                 <input type="submit" value="로그아웃">
             </form>
+            <button type="button" onclick="location.href='{% url 'accounts:update' %}'">
+                회원정보수정
+            </button>
         {% else %}
             <a href="{% url 'accounts:login'%}">로그인</a>
         {% endif %}
