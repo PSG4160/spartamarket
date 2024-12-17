@@ -12,10 +12,10 @@
 {% endif %}
 
 <ul>
-    {% for product in Products %}
+    {% for product in products %}
         <a href="{% url 'products:product_detail' product.pk %}">
         <p> [{{ product.pk }}]{{ product.title }} </p>
         </a>
+    {% endfor %}
 </ul>
-{% endfor %}
 {% endblock content %}
