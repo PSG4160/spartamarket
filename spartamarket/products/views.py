@@ -37,7 +37,7 @@ def create(request):
     context = {"form":form}
     return render(request, "products/create.html", context)
 
-
+@login_required
 def update(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if product.author != request.user:
@@ -56,6 +56,13 @@ def update(request, pk):
     }
     return render(request, 'products/update.html', context)
 
+@login_required
 def delete(request, pk):
-    pass
+    if request.user.is_authenticated:
+        product = get_object_or_404(Product, pk=pk)
+        if product.author == request.user or request.user.is_superuser:
+            product.delete()
+        else:
+            return HttpResponseForbidden("삭제권한이 없습니다.")
+    return redirect("products:products")
 
