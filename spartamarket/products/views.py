@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
 from .forms import ProductForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 
 # Create your views here.
@@ -66,3 +67,13 @@ def delete(request, pk):
             return HttpResponseForbidden("삭제권한이 없습니다.")
     return redirect("products:products")
 
+@require_POST
+def like(request,pk):
+    if request.user.is_authenticated:
+        product = get_object_or_404(Product, pk=pk)
+        if product.like_users.filter(pk=request.user.pk).exists():
+            product.like_users.remove(request.user)
+        else:
+            product.like_users.add(request.user)
+        return redirect("products:product_detail", product.pk)
+    return redirect("accounts:login")
