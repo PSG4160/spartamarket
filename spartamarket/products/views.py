@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
 from .forms import ProductForm
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 # Create your views here.
 def index(request):
@@ -39,18 +40,21 @@ def create(request):
 
 def update(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    if product.author != request.user:
+        return HttpResponseForbidden("수정권한이 없습니다.")
+    
     if request.method == "POST":
         form = ProductForm(request.POST, instance=product)
         if form.is_valid:
-            product = form.save
-            return redirect("products/product_detail", product.pk)
+            product = form.save()
+            return redirect("products:product_detail", product.pk)
     else:
         form = ProductForm(instance=product)
     context = {
         "form":form,
         "product":product
     }
-    return render(request, 'products/update', context)
+    return render(request, 'products/update.html', context)
 
 def delete(request, pk):
     pass

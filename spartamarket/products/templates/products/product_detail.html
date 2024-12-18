@@ -11,8 +11,8 @@
     <p>수정시간 : {{ product.updated_at}}</p>
 
     <a href="{% url 'products:products' %}">목록 보기 </a>
+    <a href="{% url 'products:update' product.pk %}">수정하기 </a>
     {% comment %}
-    <a href="{% url 'update' product.pk %}">수정하기 </a>
     <form action="{% url 'delete' product.pk %}" method="POST">
         {% csrf_token %}
         <input type="submit" value="삭제">
