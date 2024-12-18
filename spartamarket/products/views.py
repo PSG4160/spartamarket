@@ -25,7 +25,7 @@ def product_detail(request, pk):
 @login_required
 def create(request):
     if request.method == "POST":
-        form = ProductForm(request.POST,  request.FILES)
+        form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.author = request.user
@@ -35,3 +35,23 @@ def create(request):
         form = ProductForm()
     context = {"form":form}
     return render(request, "products/create.html", context)
+
+
+def update(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid:
+            product = form.save
+            return redirect("products/product_detail", product.pk)
+    else:
+        form = ProductForm(instance=product)
+    context = {
+        "form":form,
+        "product":product
+    }
+    return render(request, 'products/update', context)
+
+def delete(request, pk):
+    pass
+
