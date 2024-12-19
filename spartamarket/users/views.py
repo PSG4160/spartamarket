@@ -6,9 +6,9 @@ def users(request):
     pass
 
 def profile(request, username):
-    memeber = get_object_or_404(get_user_model(), username=username)
+    member = get_object_or_404(get_user_model(), username=username)
     context = {
-        "member":memeber,
+        "member":member,
     }
     return render(request, 'users/profile.html', context)
 
